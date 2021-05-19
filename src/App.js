@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react' // react hooks for state
+import {BrowserRouter as Router, Route} from 'react-router-dom'
 
 import classes from './App.module.css'
 import AddTask from './components/AddTask'
+import About from './components/About'
+import Footer from './components/Footer'
 import Header from './components/Header'
 import Tasks from './components/Tasks'
 
@@ -73,26 +76,34 @@ const App = () => {
     const data = await res.json()
 
     setTasks([...tasks, data])
-    // const id = Math.floor(Math.random() * 10000) + 1
-    // const newTask = { id, ...task }
-    // setTasks([...tasks, newTask])
   }
 
   return (
-    <div className={classes.container}>
-      <Header
-      showAdd={showAddTask}
-      onAdd={() => setShowAddTask(!showAddTask)} />
-      {/* short way of doing ternary without else statement */}
-      { showAddTask && <AddTask onAdd={addTask} />}
-      { tasks.length > 0 ? 
-        <Tasks
-        tasks={tasks}
-        onDelete={deleteTask}
-        onToggle={toggleReminder} />
-        : ('No Tasks to Show!')
-      }
-    </div>
+    <Router>
+      <div className={classes.container}>
+        <Header
+        showAdd={showAddTask}
+        onAdd={() => setShowAddTask(!showAddTask)} />
+        {/* short way of doing ternary without else statement */}
+        
+        <Route path='/' exact render={props => (
+          <>
+          { showAddTask && <AddTask onAdd={addTask} />}
+          { tasks.length > 0 ? 
+            <Tasks
+            tasks={tasks}
+            onDelete={deleteTask}
+            onToggle={toggleReminder} />
+            : ('No Tasks to Show!')
+          }
+          </>
+        )} />
+        <Route
+        path="/about"
+        component={About} />
+        <Footer />
+      </div>
+    </Router>
   )
 }
 
